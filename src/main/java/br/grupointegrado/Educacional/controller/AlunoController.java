@@ -1,8 +1,11 @@
 package br.grupointegrado.Educacional.controller;
 
 import br.grupointegrado.Educacional.dto.AlunoRequestDTO;
+import br.grupointegrado.Educacional.exceptions.AlunoNotFoundException;
+import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Aluno;
 import ch.qos.logback.core.net.server.Client;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import br.grupointegrado.Educacional.repository.AlunoRepository;
@@ -26,11 +29,14 @@ public class AlunoController {
     public Aluno findById(@PathVariable Integer id){
 
         return this.repository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("Aluno não encontrado"));
+                .orElseThrow(()-> new AlunoNotFoundException("Aluno com ID" + id + "não encontrado"));
     }
 
     @PostMapping
-    public Aluno save (@RequestBody AlunoRequestDTO dto){
+    public Aluno save (@RequestBody @Valid AlunoRequestDTO dto){
+        if (dto.nome() == null || dto.nome().isEmpty()) {
+            throw new ValidationException("O nome do aluno é obrigatório.");
+        }
         Aluno aluno = new Aluno();
         aluno.setNome(dto.nome());
         aluno.setEmail(dto.email());
@@ -41,8 +47,8 @@ public class AlunoController {
     }
 
     @PutMapping("/{id}")
-    public Aluno update (@PathVariable Integer id,
-                         @RequestBody AlunoRequestDTO dto) {
+    public Aluno update (@PathVariable  Integer id,
+                         @RequestBody @Valid AlunoRequestDTO dto) {
         Aluno aluno = this.repository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("Aluno não encontrado"));
         aluno.setNome(dto.nome());
