@@ -7,6 +7,7 @@ import br.grupointegrado.Educacional.model.Aluno;
 import ch.qos.logback.core.net.server.Client;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import br.grupointegrado.Educacional.repository.AlunoRepository;
 
@@ -24,6 +25,7 @@ public class AlunoController {
         return this.repository.findAll();
 
     }
+
 
     @GetMapping("/{id}")
     public Aluno findById(@PathVariable Integer id){
@@ -50,7 +52,7 @@ public class AlunoController {
     public Aluno update (@PathVariable  Integer id,
                          @RequestBody @Valid AlunoRequestDTO dto) {
         Aluno aluno = this.repository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("Aluno não encontrado"));
+                .orElseThrow(()-> new AlunoNotFoundException("Aluno não encontrado para atualização"));
         aluno.setNome(dto.nome());
         aluno.setEmail(dto.email());
         aluno.setMatricula(dto.matricula());
@@ -60,10 +62,11 @@ public class AlunoController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete (@PathVariable Integer id){
+    public ResponseEntity<Void> delete (@PathVariable Integer id){
         Aluno aluno = this.repository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("Aluno não encontrado"));
         this.repository.delete(aluno);
+        return ResponseEntity.noContent().build();
     }
 
 }
