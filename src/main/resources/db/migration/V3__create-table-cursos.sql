@@ -4,4 +4,4 @@ create table cursos (
  codigo varchar(20),
  carga_horaria int
 
-)
+);

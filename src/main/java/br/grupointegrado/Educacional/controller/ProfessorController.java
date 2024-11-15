@@ -68,6 +68,7 @@ public class ProfessorController {
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         Professor professor = this.repository.findById(id).
                 orElseThrow(() -> new ProfessorNotFoundException("Professor com o id " + id + "não encontrado"));
+        this.repository.delete(professor);
 
         return ResponseEntity.noContent().build();
     }
