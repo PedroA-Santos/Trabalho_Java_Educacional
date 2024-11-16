@@ -4,8 +4,10 @@ import br.grupointegrado.Educacional.dto.CursoRequestDTO;
 import br.grupointegrado.Educacional.exceptions.CursoNotFoundException;
 import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Curso;
+import br.grupointegrado.Educacional.model.Disciplina;
 import br.grupointegrado.Educacional.model.Turma;
 import br.grupointegrado.Educacional.repository.CursoRepository;
+import br.grupointegrado.Educacional.repository.DisciplinaRepository;
 import br.grupointegrado.Educacional.repository.TurmaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class CursoController {
     private CursoRepository repository;
     @Autowired
     private TurmaRepository turmaRepository;
+
+    @Autowired
+    private DisciplinaRepository discipliaRepository;
 
     // Buscar todos os cursos
     @GetMapping
@@ -78,4 +83,16 @@ public class CursoController {
         this.turmaRepository.save(turma);
         return ResponseEntity.ok(curso);
     }
+
+    @PostMapping("/{id}/add-disciplina")
+    public ResponseEntity<Curso> addDisciplina (@PathVariable Integer id, @RequestBody @Valid Disciplina disciplina){
+        Curso curso = this.repository.findById(id)
+                .orElseThrow(() -> new CursoNotFoundException("Curso com id " + id + "não encontrado"));
+        disciplina.setCurso(curso);
+        this.discipliaRepository.save(disciplina);
+        return ResponseEntity.ok(curso);
+    }
+
+
+
 }

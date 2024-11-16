@@ -22,13 +22,24 @@ public class Curso {
     @Column
     private Integer carga_horaria;
 
-    @OneToMany(mappedBy = "curso")
-    @JsonIgnoreProperties("curso")
+    @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"curso"}) // Evita a serialização de informações desnecessárias
     private List<Turma> turmas;
 
+    @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"curso"}) // Evita a serialização de informações desnecessárias
+    private List<Disciplina> disciplinas;
+
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
     }
 
     public String getNome() {

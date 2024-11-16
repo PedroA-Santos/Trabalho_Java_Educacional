@@ -1,5 +1,6 @@
 package br.grupointegrado.Educacional.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class Turma {
     private Integer semestre;
     @ManyToOne
     @JoinColumn(name ="curso_id" , referencedColumnName = "id")
+    @JsonIgnoreProperties({"disciplinas","turmas","curso"})//Json para organizar a visualização da resposta JSON
     private Curso curso;
 
 
