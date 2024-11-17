@@ -1,8 +1,13 @@
 package br.grupointegrado.Educacional.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
+
 @Entity
 @Table(name = "alunos")
 public class Aluno {
@@ -23,6 +28,10 @@ public class Aluno {
     @Column
     private Date data_nascimento;
 
+    @OneToMany(mappedBy = "aluno")
+    @JsonBackReference
+    private List<Matricula> matriculas;
+
     public Integer getId() {
         return id;
     }
@@ -31,35 +40,43 @@ public class Aluno {
         this.id = id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }
-
-    public void setData_nascimento(Date data_nascimento) {
-        this.data_nascimento = data_nascimento;
-    }
-
     public String getNome() {
         return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getMatricula() {
         return matricula;
     }
 
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
     public Date getData_nascimento() {
         return data_nascimento;
+    }
+
+    public void setData_nascimento(Date data_nascimento) {
+        this.data_nascimento = data_nascimento;
+    }
+
+    public List<Matricula> getMatriculas() {
+        return matriculas;
+    }
+
+    public void setMatriculas(List<Matricula> matriculas) {
+        this.matriculas = matriculas;
     }
 }
