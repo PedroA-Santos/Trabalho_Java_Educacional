@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "disciplinas")
 public class Disciplina {
@@ -26,6 +28,9 @@ public class Disciplina {
     @JoinColumn(name = "curso_id")
     @JsonIgnoreProperties({"turmas","disciplinas"})//Json para organizar a visualização da resposta JSON
     private Curso curso;
+
+    @OneToMany(mappedBy = "disciplina")
+    private List<Notas> notas;
 
     // Getters e setters
     public Integer getId() {
@@ -66,5 +71,13 @@ public class Disciplina {
 
     public void setCurso(Curso curso) {
         this.curso = curso;
+    }
+
+    public List<Notas> getNota() {
+        return notas;
+    }
+
+    public void setNota(List<Notas> nota) {
+        this.notas = nota;
     }
 }
