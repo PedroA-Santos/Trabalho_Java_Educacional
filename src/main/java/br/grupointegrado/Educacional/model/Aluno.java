@@ -32,10 +32,7 @@ public class Aluno {
     @JsonBackReference
     private List<Matricula> matriculas;
 
-    @ManyToOne
-    @JoinColumn(name = "turma_id", referencedColumnName = "id")
-    @JsonBackReference  // Evita loop infinito na serialização JSON
-    private Turma turma;
+
 
 
 

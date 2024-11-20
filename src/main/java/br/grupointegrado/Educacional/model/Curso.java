@@ -27,7 +27,7 @@ public class Curso {
     private List<Turma> turmas;
 
     @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"curso"}) // Evita a serialização de informações desnecessárias
+    @JsonIgnoreProperties({"curso","notas"}) // Evita a serialização de informações desnecessárias
     private List<Disciplina> disciplinas;
 
     public List<Disciplina> getDisciplinas() {

@@ -1,7 +1,11 @@
 package br.grupointegrado.Educacional.controller;
 
 import br.grupointegrado.Educacional.dto.CursoRequestDTO;
+import br.grupointegrado.Educacional.dto.DisciplinaRequestDTO;
+import br.grupointegrado.Educacional.dto.TurmaRequestDTO;
 import br.grupointegrado.Educacional.exceptions.CursoNotFoundException;
+import br.grupointegrado.Educacional.exceptions.DisciplinaNotFoundException;
+import br.grupointegrado.Educacional.exceptions.TurmaNotFoundException;
 import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Curso;
 import br.grupointegrado.Educacional.model.Disciplina;
@@ -76,23 +80,45 @@ public class CursoController {
 
     // Adicionar uma turma a um curso
     @PostMapping("/{id}/add-turma")
-    public ResponseEntity<Curso> addTurma(@PathVariable Integer id, @RequestBody @Valid Turma turma) {
+    public ResponseEntity<Curso> addTurma(@PathVariable Integer id, @RequestBody @Valid TurmaRequestDTO turmaDTO) {
+        // Encontrar o curso pelo ID
         Curso curso = this.repository.findById(id)
                 .orElseThrow(() -> new CursoNotFoundException("Curso com id " + id + " não encontrado"));
+
+        // Encontrar a turma pelo ID passado no corpo da requisição
+        Turma turma = this.turmaRepository.findById(turmaDTO.turmaId())
+                .orElseThrow(() -> new TurmaNotFoundException("Turma com id " + turmaDTO.turmaId() + " não encontrada"));
+
+        // Associar a turma ao curso
         turma.setCurso(curso);
+
+        // Salvar a turma com o curso associado
         this.turmaRepository.save(turma);
+
+        // Retornar o curso atualizado
         return ResponseEntity.ok(curso);
     }
+
+
 
     @PostMapping("/{id}/add-disciplina")
-    public ResponseEntity<Curso> addDisciplina (@PathVariable Integer id, @RequestBody @Valid Disciplina disciplina){
+    public ResponseEntity<Curso> addDisciplina(@PathVariable Integer id, @RequestBody @Valid DisciplinaRequestDTO dto) {
+        // Encontrar o curso pelo id
         Curso curso = this.repository.findById(id)
-                .orElseThrow(() -> new CursoNotFoundException("Curso com id " + id + "não encontrado"));
+                .orElseThrow(() -> new CursoNotFoundException("Curso com id " + id + " não encontrado"));
+
+        // Encontrar a disciplina pelo id presente no DTO
+        Disciplina disciplina = this.discipliaRepository.findById(dto.disciplinaId())
+                .orElseThrow(() -> new DisciplinaNotFoundException("Disciplina com id " + dto.disciplinaId() + " não encontrada"));
+
+        // Associar o curso à disciplina
         disciplina.setCurso(curso);
+
+        // Salvar a disciplina com o curso associado
         this.discipliaRepository.save(disciplina);
+
         return ResponseEntity.ok(curso);
     }
-
 
 
 }

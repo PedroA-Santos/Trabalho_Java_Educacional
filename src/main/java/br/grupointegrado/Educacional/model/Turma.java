@@ -30,9 +30,7 @@ public class Turma {
     @JsonIgnoreProperties("turma")
     private List<Matricula> matriculas;
 
-    @OneToMany(mappedBy = "turma", fetch = FetchType.EAGER) // Mudei de LAZY para EAGER
-    @JsonManagedReference
-    private List<Aluno> alunos;
+
 
     public Integer getId() {
         return id;
@@ -42,13 +40,7 @@ public class Turma {
         this.id = id;
     }
 
-    public void setAlunos(List<Aluno> alunos) {
-        this.alunos = alunos;
-    }
 
-    public List<Aluno> getAlunos() {
-        return alunos;
-    }
 
     public Integer getAno() {
         return ano;

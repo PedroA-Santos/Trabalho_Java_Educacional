@@ -2,6 +2,7 @@ package br.grupointegrado.Educacional.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -19,17 +20,19 @@ public class Disciplina {
 
     @Column(length = 10)
     private String codigo;
+
     @ManyToOne
-    @JoinColumn(name = "professor_id",referencedColumnName = "id")
-    @JsonIgnoreProperties("disciplinas")
-   private Professor professor;
+    @JoinColumn(name = "professor_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"disciplinas","notas","matriculas"}) // Ignora disciplinas no professor
+    private Professor professor;
 
     @ManyToOne
     @JoinColumn(name = "curso_id")
-    @JsonIgnoreProperties({"turmas","disciplinas"})//Json para organizar a visualização da resposta JSON
+    @JsonIgnoreProperties({"turmas", "disciplinas","notas"}) // Ignora disciplinas no curso
     private Curso curso;
 
     @OneToMany(mappedBy = "disciplina")
+    @JsonManagedReference
     private List<Notas> notas;
 
     // Getters e setters
@@ -73,11 +76,11 @@ public class Disciplina {
         this.curso = curso;
     }
 
-    public List<Notas> getNota() {
+    public List<Notas> getNotas() {
         return notas;
     }
 
-    public void setNota(List<Notas> nota) {
-        this.notas = nota;
+    public void setNotas(List<Notas> notas) {
+        this.notas = notas;
     }
 }

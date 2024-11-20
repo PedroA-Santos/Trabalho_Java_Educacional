@@ -61,8 +61,6 @@ public class MatriculaController {
 
 
 
-        turma.getAlunos().add(aluno); // Isso adiciona o aluno à lista de alunos da turma
-
         // Salvando a turma e a matrícula
         turmaRepository.save(turma);
         return this.repository.save(matricula);

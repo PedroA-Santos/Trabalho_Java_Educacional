@@ -1,9 +1,12 @@
 package br.grupointegrado.Educacional.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "matriculas")
@@ -20,7 +23,12 @@ public class Matricula {
 
     @ManyToOne
     @JoinColumn(name = "turma_id")
+    @JsonIgnoreProperties({"matriculas"})
     private Turma turma;
+
+    @OneToMany(mappedBy = "matricula")
+    @JsonIgnore
+    private List<Notas> notas;
 
     public Integer getId() {
         return id;
@@ -44,5 +52,13 @@ public class Matricula {
 
     public void setTurma(Turma turma) {
         this.turma = turma;
+    }
+
+    public List<Notas> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(List<Notas> notas) {
+        this.notas = notas;
     }
 }

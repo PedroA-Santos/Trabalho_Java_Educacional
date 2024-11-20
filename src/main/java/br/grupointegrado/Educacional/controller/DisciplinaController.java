@@ -2,6 +2,7 @@ package br.grupointegrado.Educacional.controller;
 
 
 import br.grupointegrado.Educacional.dto.DisciplinaRequestDTO;
+import br.grupointegrado.Educacional.dto.ProfessorRequestDTO;
 import br.grupointegrado.Educacional.exceptions.DisciplinaNotFoundException;
 import br.grupointegrado.Educacional.exceptions.ProfessorNotFoundException;
 import br.grupointegrado.Educacional.model.Disciplina;
@@ -68,14 +69,14 @@ public class DisciplinaController {
 
     @PostMapping("/{id}/add-professor")
     public ResponseEntity<Disciplina> addProfessor(@PathVariable Integer id,
-                                                   @RequestBody @Valid Professor professor) {
-        // Encontrar a disciplina
+                                                   @RequestBody @Valid ProfessorRequestDTO professorDTO) {
+        // Encontrar a disciplina pelo ID
         Disciplina disciplina = this.repository.findById(id)
-                .orElseThrow(() -> new DisciplinaNotFoundException("Disciplina com id " + id + "não encontrada"));
+                .orElseThrow(() -> new DisciplinaNotFoundException("Disciplina com id " + id + " não encontrada"));
 
-        // Verificar se o professor existe antes de associar
-        professor = this.professorRepository.findById(professor.getId())
-                .orElseThrow(() -> new ProfessorNotFoundException("Professor não encontrado"));
+        // Encontrar o professor pelo ID do professor no DTO
+        Professor professor = this.professorRepository.findById(professorDTO.id())
+                .orElseThrow(() -> new ProfessorNotFoundException("Professor com id " + professorDTO.id() + " não encontrado"));
 
         // Associar o professor à disciplina
         disciplina.setProfessor(professor);
@@ -85,6 +86,7 @@ public class DisciplinaController {
 
         return ResponseEntity.ok(disciplina);
     }
+
 
 
 
