@@ -14,12 +14,12 @@ public class Matricula {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "aluno_id", nullable = false)
+    @JoinColumn(name = "aluno_id")
     @JsonManagedReference
     private Aluno aluno;
 
     @ManyToOne
-    @JoinColumn(name = "turma_id", nullable = false)
+    @JoinColumn(name = "turma_id")
     private Turma turma;
 
     public Integer getId() {

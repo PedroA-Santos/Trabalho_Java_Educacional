@@ -43,22 +43,33 @@ public class MatriculaController {
 
 
     @PostMapping
-    public Matricula save (@RequestBody @Valid MatriculaRequestDTO dto){
+    public Matricula save(@RequestBody @Valid MatriculaRequestDTO dto){
         if(dto.aluno_id() == null || dto.turma_id() == null){
             throw new ValidationException("Aluno e Turma são obrigatórios para a criação da matrícula");
         }
+
         Aluno aluno = alunoRepository.findById(dto.aluno_id())
-                .orElseThrow(()-> new ValidationException("Aluno com id " + dto.aluno_id() + "não encontrado"));
+                .orElseThrow(() -> new ValidationException("Aluno com id " + dto.aluno_id() + " não encontrado"));
 
         Turma turma = turmaRepository.findById(dto.turma_id())
-                .orElseThrow(() -> new ValidationException("Turma com id " + dto.turma_id() + "não encontrada"));
+                .orElseThrow(() -> new ValidationException("Turma com id " + dto.turma_id() + " não encontrada"));
 
+        // Criando a matrícula
         Matricula matricula = new Matricula();
         matricula.setAluno(aluno);
         matricula.setTurma(turma);
 
+
+
+        turma.getAlunos().add(aluno); // Isso adiciona o aluno à lista de alunos da turma
+
+        // Salvando a turma e a matrícula
+        turmaRepository.save(turma);
         return this.repository.save(matricula);
+
     }
+
+
 
     @PutMapping("/{id}")
     public Matricula update (@PathVariable Integer id,

@@ -2,6 +2,7 @@ package br.grupointegrado.Educacional.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -26,8 +27,12 @@ public class Turma {
     private Curso curso;
 
     @OneToMany(mappedBy = "turma")
-    @JsonIgnore
+    @JsonIgnoreProperties("turma")
     private List<Matricula> matriculas;
+
+    @OneToMany(mappedBy = "turma", fetch = FetchType.EAGER) // Mudei de LAZY para EAGER
+    @JsonManagedReference
+    private List<Aluno> alunos;
 
     public Integer getId() {
         return id;
@@ -35,6 +40,14 @@ public class Turma {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public void setAlunos(List<Aluno> alunos) {
+        this.alunos = alunos;
+    }
+
+    public List<Aluno> getAlunos() {
+        return alunos;
     }
 
     public Integer getAno() {
