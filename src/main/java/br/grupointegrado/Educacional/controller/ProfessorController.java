@@ -2,7 +2,6 @@ package br.grupointegrado.Educacional.controller;
 
 
 import br.grupointegrado.Educacional.dto.ProfessorRequestDTO;
-import br.grupointegrado.Educacional.exceptions.ProfessorNotFoundException;
 import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Professor;
 import br.grupointegrado.Educacional.repository.ProfessorRepository;
@@ -30,7 +29,7 @@ public class ProfessorController {
     public Professor findById (@PathVariable Integer id){
 
         return  this.repository.findById(id)
-                .orElseThrow(() -> new ProfessorNotFoundException("Professor com o id " + id + "não encontrado"));
+                .orElseThrow(() -> new  ValidationException("Professor com o id " + id + "não encontrado"));
     }
 
     @PostMapping
@@ -53,7 +52,7 @@ public class ProfessorController {
                              @RequestBody @Valid ProfessorRequestDTO dto){
 
         Professor professor = this.repository.findById(id)
-                .orElseThrow(() -> new ProfessorNotFoundException("Professor com id " + id  + "não encontrado"));
+                .orElseThrow(() -> new  ValidationException("Professor com id " + id  + "não encontrado"));
         professor.setNome(dto.nome());
         professor.setEmail(dto.email());
         professor.setTelefone(dto.telefone());
@@ -67,7 +66,7 @@ public class ProfessorController {
 
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         Professor professor = this.repository.findById(id).
-                orElseThrow(() -> new ProfessorNotFoundException("Professor com o id " + id + "não encontrado"));
+                orElseThrow(() -> new  ValidationException("Professor com o id " + id + "não encontrado"));
         this.repository.delete(professor);
 
         return ResponseEntity.noContent().build();

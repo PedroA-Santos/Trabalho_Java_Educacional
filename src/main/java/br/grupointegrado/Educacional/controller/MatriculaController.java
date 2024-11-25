@@ -2,7 +2,6 @@ package br.grupointegrado.Educacional.controller;
 
 
 import br.grupointegrado.Educacional.dto.MatriculaRequestDTO;
-import br.grupointegrado.Educacional.exceptions.MatriculaNotFoundException;
 import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Aluno;
 import br.grupointegrado.Educacional.model.Matricula;
@@ -37,7 +36,7 @@ public class MatriculaController {
     @GetMapping("/{id}")
     public Matricula findById(@PathVariable Integer id){
         return this.repository.findById(id)
-                .orElseThrow(()-> new MatriculaNotFoundException("Matricula com o id" + id + "não encontrada"));
+                .orElseThrow(()-> new  ValidationException("Matricula com o id" + id + "não encontrada"));
 
     }
 

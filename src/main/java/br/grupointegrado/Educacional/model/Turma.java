@@ -23,12 +23,14 @@ public class Turma {
 
     @ManyToOne
     @JoinColumn(name = "curso_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"disciplinas", "turmas", "curso"})
+    @JsonIgnoreProperties({"disciplinas", "turmas", "curso"})//JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private Curso curso;
 
     @OneToMany(mappedBy = "turma")
-    @JsonIgnoreProperties("turma")
+    @JsonIgnoreProperties("turma")//JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private List<Matricula> matriculas;
+
+
 
 
 
@@ -39,8 +41,6 @@ public class Turma {
     public void setId(Integer id) {
         this.id = id;
     }
-
-
 
     public Integer getAno() {
         return ano;

@@ -24,7 +24,7 @@ public class Professor {
     private String telefone;
 
    @OneToMany(mappedBy = "professor")
-   @JsonIgnoreProperties({"professor","turmas","notas"})
+   @JsonIgnoreProperties({"professor","turmas","notas"})//JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private List<Disciplina> disciplinas;
 
     @Column(length = 100)

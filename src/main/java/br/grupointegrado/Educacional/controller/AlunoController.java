@@ -1,10 +1,8 @@
 package br.grupointegrado.Educacional.controller;
 
 import br.grupointegrado.Educacional.dto.AlunoRequestDTO;
-import br.grupointegrado.Educacional.exceptions.AlunoNotFoundException;
 import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Aluno;
-import ch.qos.logback.core.net.server.Client;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,7 @@ public class AlunoController {
     public Aluno findById(@PathVariable Integer id){
 
         return this.repository.findById(id)
-                .orElseThrow(()-> new AlunoNotFoundException("Aluno com ID" + id + "não encontrado"));
+                .orElseThrow(()-> new  ValidationException("Aluno com ID" + id + "não encontrado"));
     }
 
     @PostMapping
@@ -52,7 +50,7 @@ public class AlunoController {
     public Aluno update (@PathVariable  Integer id,
                          @RequestBody @Valid AlunoRequestDTO dto) {
         Aluno aluno = this.repository.findById(id)
-                .orElseThrow(()-> new AlunoNotFoundException("Aluno não encontrado para atualização"));
+                .orElseThrow(()-> new  ValidationException("Aluno não encontrado para atualização"));
         aluno.setNome(dto.nome());
         aluno.setEmail(dto.email());
         aluno.setMatricula(dto.matricula());
@@ -64,7 +62,7 @@ public class AlunoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete (@PathVariable Integer id){
         Aluno aluno = this.repository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("Aluno não encontrado"));
+                .orElseThrow(()-> new  ValidationException("Aluno não encontrado"));
         this.repository.delete(aluno);
         return ResponseEntity.noContent().build();
     }

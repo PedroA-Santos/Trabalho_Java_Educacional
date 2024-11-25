@@ -23,7 +23,7 @@ public class Matricula {
 
     @ManyToOne
     @JoinColumn(name = "turma_id")
-    @JsonIgnoreProperties({"matriculas"})
+    @JsonIgnoreProperties({"matriculas"})//JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private Turma turma;
 
     @OneToMany(mappedBy = "matricula")

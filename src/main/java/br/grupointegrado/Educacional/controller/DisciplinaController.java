@@ -3,8 +3,7 @@ package br.grupointegrado.Educacional.controller;
 
 import br.grupointegrado.Educacional.dto.DisciplinaRequestDTO;
 import br.grupointegrado.Educacional.dto.ProfessorRequestDTO;
-import br.grupointegrado.Educacional.exceptions.DisciplinaNotFoundException;
-import br.grupointegrado.Educacional.exceptions.ProfessorNotFoundException;
+import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Disciplina;
 import br.grupointegrado.Educacional.model.Professor;
 import br.grupointegrado.Educacional.repository.DisciplinaRepository;
@@ -35,7 +34,7 @@ public class DisciplinaController {
     @GetMapping("/{id}")
     public Disciplina findById (@PathVariable Integer id){
        return this.repository.findById(id)
-                .orElseThrow(() -> new DisciplinaNotFoundException("Disciplina com id " + id + "não encontrada"));
+                .orElseThrow(() -> new  ValidationException("Disciplina com id " + id + "não encontrada"));
 
 
     }
@@ -53,7 +52,7 @@ public class DisciplinaController {
                               @RequestBody @Valid DisciplinaRequestDTO dto){
 
         Disciplina disciplina = this.repository.findById(id)
-                .orElseThrow(() -> new DisciplinaNotFoundException("Disciplina com o id " + id + "não encontrada"));
+                .orElseThrow(() -> new  ValidationException("Disciplina com o id " + id + "não encontrada"));
             disciplina.setNome(dto.nome());
             disciplina.setCodigo(dto.codigo());
             return this.repository.save(disciplina);
@@ -62,7 +61,7 @@ public class DisciplinaController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete (@PathVariable Integer id){
         Disciplina disciplina = this.repository.findById(id)
-                .orElseThrow(() -> new DisciplinaNotFoundException("Disciplina com id " + id + "não encontrada"));
+                .orElseThrow(() -> new  ValidationException("Disciplina com id " + id + "não encontrada"));
         this.repository.delete(disciplina);
         return ResponseEntity.noContent().build();
     }
@@ -72,11 +71,11 @@ public class DisciplinaController {
                                                    @RequestBody @Valid ProfessorRequestDTO professorDTO) {
         // Encontrar a disciplina pelo ID
         Disciplina disciplina = this.repository.findById(id)
-                .orElseThrow(() -> new DisciplinaNotFoundException("Disciplina com id " + id + " não encontrada"));
+                .orElseThrow(() -> new  ValidationException("Disciplina com id " + id + " não encontrada"));
 
         // Encontrar o professor pelo ID do professor no DTO
         Professor professor = this.professorRepository.findById(professorDTO.id())
-                .orElseThrow(() -> new ProfessorNotFoundException("Professor com id " + professorDTO.id() + " não encontrado"));
+                .orElseThrow(() -> new ValidationException("Professor com id " + professorDTO.id() + " não encontrado"));
 
         // Associar o professor à disciplina
         disciplina.setProfessor(professor);

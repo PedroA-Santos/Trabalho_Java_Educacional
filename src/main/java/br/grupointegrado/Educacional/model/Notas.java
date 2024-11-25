@@ -25,7 +25,7 @@ public class Notas {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "disciplina_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"notas","professor"}) // Evita que a disciplina seja serializada em detalhes em recursão
+    @JsonIgnoreProperties({"notas","professor"}) //JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private Disciplina disciplina;
 
     @ManyToOne

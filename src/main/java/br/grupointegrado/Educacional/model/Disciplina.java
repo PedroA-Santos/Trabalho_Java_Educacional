@@ -1,6 +1,7 @@
 package br.grupointegrado.Educacional.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -23,17 +24,21 @@ public class Disciplina {
 
     @ManyToOne
     @JoinColumn(name = "professor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"disciplinas","notas","matriculas"}) // Ignora disciplinas no professor
+    @JsonIgnoreProperties({"disciplinas","notas","matriculas"})//JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private Professor professor;
 
     @ManyToOne
     @JoinColumn(name = "curso_id")
-    @JsonIgnoreProperties({"turmas", "disciplinas","notas"}) // Ignora disciplinas no curso
+    @JsonIgnoreProperties({"turmas", "disciplinas"})//JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private Curso curso;
 
     @OneToMany(mappedBy = "disciplina")
     @JsonManagedReference
+    @JsonIgnoreProperties({"matricula", "turma"}) //JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
+    @JsonIgnore
     private List<Notas> notas;
+
+
 
     // Getters e setters
     public Integer getId() {

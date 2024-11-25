@@ -1,7 +1,7 @@
 package br.grupointegrado.Educacional.controller;
 
 import br.grupointegrado.Educacional.dto.TurmaRequestDTO;
-import br.grupointegrado.Educacional.exceptions.TurmaNotFoundException;
+import br.grupointegrado.Educacional.exceptions.ValidationException;
 import br.grupointegrado.Educacional.model.Turma;
 import br.grupointegrado.Educacional.repository.TurmaRepository;
 import jakarta.validation.Valid;
@@ -28,12 +28,15 @@ public class TurmaController {
     @GetMapping("/{id}")
     public Turma findById(@PathVariable Integer id) {
         return this.repository.findById(id)
-                .orElseThrow(() -> new TurmaNotFoundException("Turma com o id " + id + " não encontrada"));
+                .orElseThrow(() -> new ValidationException("Turma com o id " + id + " não encontrada"));
     }
 
     // Criar uma nova turma
     @PostMapping
     public Turma save(@RequestBody @Valid TurmaRequestDTO dto) {
+        if (dto.ano() == null ){
+            throw new ValidationException("O ano do curso é obrigatório.");
+        }
         Turma turma = new Turma();
         turma.setAno(dto.ano());
         turma.setSemestre(dto.semestre());
@@ -44,7 +47,7 @@ public class TurmaController {
     @PutMapping("/{id}")
     public Turma update(@PathVariable Integer id, @RequestBody @Valid TurmaRequestDTO dto) {
         Turma turma = this.repository.findById(id)
-                .orElseThrow(() -> new TurmaNotFoundException("Turma com o id " + id + " não encontrada"));
+                .orElseThrow(() -> new ValidationException("Turma com o id " + id + " não encontrada"));
         turma.setAno(dto.ano());
         turma.setSemestre(dto.semestre());
         return this.repository.save(turma);
@@ -54,7 +57,7 @@ public class TurmaController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         Turma turma = this.repository.findById(id)
-                .orElseThrow(() -> new TurmaNotFoundException("Turma com id " + id + " não encontrada"));
+                .orElseThrow(() -> new  ValidationException("Turma com id " + id + " não encontrada"));
         this.repository.delete(turma);
         return ResponseEntity.noContent().build();
     }

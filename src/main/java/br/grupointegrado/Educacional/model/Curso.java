@@ -23,11 +23,11 @@ public class Curso {
     private Integer carga_horaria;
 
     @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"curso"}) // Evita a serialização de informações desnecessárias
+    @JsonIgnoreProperties({"curso","notas"}) //JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private List<Turma> turmas;
 
     @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"curso","notas"}) // Evita a serialização de informações desnecessárias
+    @JsonIgnoreProperties({"curso","notas"}) //JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private List<Disciplina> disciplinas;
 
     public List<Disciplina> getDisciplinas() {
