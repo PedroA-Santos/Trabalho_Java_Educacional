@@ -30,6 +30,10 @@ public class Matricula {
     @JsonIgnore
     private List<Notas> notas;
 
+
+
+    //GETTERS E SETTERS
+
     public Integer getId() {
         return id;
     }

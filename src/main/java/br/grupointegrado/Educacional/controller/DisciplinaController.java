@@ -32,30 +32,33 @@ public class DisciplinaController {
 
 
     @GetMapping("/{id}")
-    public Disciplina findById (@PathVariable Integer id){
-       return this.repository.findById(id)
+    public ResponseEntity<Disciplina> findById (@PathVariable Integer id){
+       Disciplina disciplina = this.repository.findById(id)
                 .orElseThrow(() -> new  ValidationException("Disciplina com id " + id + "não encontrada"));
+
+
+       return ResponseEntity.ok(disciplina);
 
 
     }
 
     @PostMapping
-    public Disciplina save (@RequestBody @Valid DisciplinaRequestDTO dto){
+    public ResponseEntity<Disciplina>save (@RequestBody @Valid DisciplinaRequestDTO dto){
         Disciplina disciplina = new Disciplina();
         disciplina.setNome(dto.nome());
         disciplina.setCodigo(dto.codigo());
-        return this.repository.save(disciplina);
+        return ResponseEntity.ok(this.repository.save(disciplina));
     }
 
     @PutMapping("/{id}")
-    public Disciplina update (@PathVariable Integer id,
+    public ResponseEntity <Disciplina> update (@PathVariable Integer id,
                               @RequestBody @Valid DisciplinaRequestDTO dto){
 
         Disciplina disciplina = this.repository.findById(id)
                 .orElseThrow(() -> new  ValidationException("Disciplina com o id " + id + "não encontrada"));
             disciplina.setNome(dto.nome());
             disciplina.setCodigo(dto.codigo());
-            return this.repository.save(disciplina);
+        return ResponseEntity.ok(this.repository.save(disciplina));
     }
 
     @DeleteMapping("/{id}")
@@ -66,6 +69,8 @@ public class DisciplinaController {
         return ResponseEntity.noContent().build();
     }
 
+
+    //SE O PROFESSOR JÁ EXISTIR, APENAS PASSAR O ID DELE NO BODY
     @PostMapping("/{id}/add-professor")
     public ResponseEntity<Disciplina> addProfessor(@PathVariable Integer id,
                                                    @RequestBody @Valid ProfessorRequestDTO professorDTO) {
@@ -77,10 +82,9 @@ public class DisciplinaController {
         Professor professor = this.professorRepository.findById(professorDTO.id())
                 .orElseThrow(() -> new ValidationException("Professor com id " + professorDTO.id() + " não encontrado"));
 
-        // Associar o professor à disciplina
+
         disciplina.setProfessor(professor);
 
-        // Salvar a disciplina com o professor associado
         this.repository.save(disciplina);
 
         return ResponseEntity.ok(disciplina);

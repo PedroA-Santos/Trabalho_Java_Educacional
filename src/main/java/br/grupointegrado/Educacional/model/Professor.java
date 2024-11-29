@@ -30,7 +30,7 @@ public class Professor {
     @Column(length = 100)
     private String especialidade;
 
-    // Getters e setters
+    //GETTERS E SETTERS
     public Integer getId() {
         return id;
     }

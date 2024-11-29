@@ -34,15 +34,17 @@ public class MatriculaController {
     }
 
     @GetMapping("/{id}")
-    public Matricula findById(@PathVariable Integer id){
-        return this.repository.findById(id)
-                .orElseThrow(()-> new  ValidationException("Matricula com o id" + id + "não encontrada"));
+    public ResponseEntity<Matricula> findById(@PathVariable Integer id){
+        Matricula matricula = this.repository.findById(id)
+                .orElseThrow(()-> new  ValidationException ("Matricula com o id" + id + "não encontrada"));
+
+        return ResponseEntity.ok(matricula);
 
     }
 
 
     @PostMapping
-    public Matricula save(@RequestBody @Valid MatriculaRequestDTO dto){
+    public ResponseEntity<Matricula> save(@RequestBody @Valid MatriculaRequestDTO dto){
         if(dto.aluno_id() == null || dto.turma_id() == null){
             throw new ValidationException("Aluno e Turma são obrigatórios para a criação da matrícula");
         }
@@ -62,14 +64,14 @@ public class MatriculaController {
 
         // Salvando a turma e a matrícula
         turmaRepository.save(turma);
-        return this.repository.save(matricula);
+        return ResponseEntity.ok(this.repository.save(matricula));
 
     }
 
 
 
     @PutMapping("/{id}")
-    public Matricula update (@PathVariable Integer id,
+    public ResponseEntity<Matricula> update (@PathVariable Integer id,
                              @RequestBody @Valid MatriculaRequestDTO dto){
         Matricula matricula = this.repository.findById(id)
                 .orElseThrow(() -> new ValidationException("Matricula com o id" + id + "não encontrada"));
@@ -83,7 +85,7 @@ public class MatriculaController {
         matricula.setTurma(turma);
         matricula.setAluno(aluno);
 
-        return this.repository.save(matricula);
+        return ResponseEntity.ok(this.repository.save(matricula));
     }
 
     @DeleteMapping("/{id}")

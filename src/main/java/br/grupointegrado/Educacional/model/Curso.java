@@ -30,6 +30,10 @@ public class Curso {
     @JsonIgnoreProperties({"curso","notas"}) //JSONS IGNORES PARA MELHOR FORMATAÇÃO NO RETORNO DO JSON
     private List<Disciplina> disciplinas;
 
+
+
+    //GETTERS E SETTERS
+
     public List<Disciplina> getDisciplinas() {
         return disciplinas;
     }

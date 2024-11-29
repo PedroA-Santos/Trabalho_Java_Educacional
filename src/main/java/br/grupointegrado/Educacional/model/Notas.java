@@ -32,7 +32,9 @@ public class Notas {
     @JoinColumn(name = "matricula_id", referencedColumnName = "id")
     private Matricula matricula;
 
-    // Getters e Setters
+
+
+    //GETTERS E SETTERS
     public Integer getId() {
         return id;
     }
@@ -52,6 +54,7 @@ public class Notas {
     public LocalDate getData_lancamento() {
         return data_lancamento;
     }
+
 
     public void setData_lancamento(LocalDate data_lancamento) {
         this.data_lancamento = data_lancamento;

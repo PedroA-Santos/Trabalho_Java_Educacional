@@ -15,45 +15,65 @@ import java.util.List;
 @RequestMapping("/api/turmas")
 public class TurmaController {
 
+
+    // REPOSITORY DA TURMA
     @Autowired
     private TurmaRepository repository;
 
-    // Buscar todas as turmas
+
+
+    // BUSCAR TODAS AS TURMAS COM UM LIST DAS TURMAS
     @GetMapping
     public List<Turma> findAll() {
         return this.repository.findAll();
     }
 
-    // Buscar turma por id
+
+
+
+
+    // BUSCAR UMA TURMA PELO SEU ID
     @GetMapping("/{id}")
-    public Turma findById(@PathVariable Integer id) {
-        return this.repository.findById(id)
+    public ResponseEntity<Turma> findById(@PathVariable Integer id) {
+        Turma turma =  this.repository.findById(id)
                 .orElseThrow(() -> new ValidationException("Turma com o id " + id + " não encontrada"));
+
+         return ResponseEntity.ok(turma);
     }
 
-    // Criar uma nova turma
+
+
+
+
+    // CRIAR UMA NOVA TURMA COM O MÉTODO POST
     @PostMapping
-    public Turma save(@RequestBody @Valid TurmaRequestDTO dto) {
+    public ResponseEntity<Turma> save(@RequestBody @Valid TurmaRequestDTO dto) {
         if (dto.ano() == null ){
             throw new ValidationException("O ano do curso é obrigatório.");
         }
         Turma turma = new Turma();
         turma.setAno(dto.ano());
         turma.setSemestre(dto.semestre());
-        return this.repository.save(turma);
+        return ResponseEntity.ok(this.repository.save(turma));
     }
 
-    // Atualizar uma turma
+
+
+
+    // ATUALIZAR UMA TURMA PELO SEU ID
     @PutMapping("/{id}")
-    public Turma update(@PathVariable Integer id, @RequestBody @Valid TurmaRequestDTO dto) {
+    public ResponseEntity<Turma>  update(@PathVariable Integer id, @RequestBody @Valid TurmaRequestDTO dto) {
         Turma turma = this.repository.findById(id)
                 .orElseThrow(() -> new ValidationException("Turma com o id " + id + " não encontrada"));
         turma.setAno(dto.ano());
         turma.setSemestre(dto.semestre());
-        return this.repository.save(turma);
+        return ResponseEntity.ok(this.repository.save(turma));
     }
 
-    // Deletar uma turma
+
+
+
+    // DELETAR UMA TURMA PELO SEU ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         Turma turma = this.repository.findById(id)

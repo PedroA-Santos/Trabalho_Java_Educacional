@@ -29,22 +29,28 @@ public class CursoController {
     @Autowired
     private DisciplinaRepository discipliaRepository;
 
-    // Buscar todos os cursos
+
     @GetMapping
     public List<Curso> findAll() {
         return this.repository.findAll();
     }
 
-    // Buscar curso por id
+
+
+
     @GetMapping("/{id}")
-    public Curso findById(@PathVariable Integer id) {
-        return this.repository.findById(id)
+    public ResponseEntity<Curso> findById(@PathVariable Integer id) {
+        Curso curso = this.repository.findById(id)
                 .orElseThrow(() -> new  ValidationException("Curso com id " + id + " não encontrado"));
+
+        return ResponseEntity.ok(curso);
     }
 
-    // Criar um novo curso
+
+
+
     @PostMapping
-    public Curso save(@RequestBody @Valid CursoRequestDTO dto) {
+    public ResponseEntity<Curso>save(@RequestBody @Valid CursoRequestDTO dto) {
         if (dto.nome() == null || dto.nome().isEmpty()) {
             throw new ValidationException("O nome do Curso é obrigatório.");
         }
@@ -52,21 +58,26 @@ public class CursoController {
         curso.setNome(dto.nome());
         curso.setCodigo(dto.codigo());
         curso.setCarga_horaria(dto.carga_horaria());
-        return this.repository.save(curso);
+        return ResponseEntity.ok(this.repository.save(curso));
     }
 
-    // Atualizar um curso
+
+
+
     @PutMapping("/{id}")
-    public Curso update(@PathVariable Integer id, @RequestBody @Valid CursoRequestDTO dto) {
+    public ResponseEntity<Curso> update(@PathVariable Integer id, @RequestBody @Valid CursoRequestDTO dto) {
         Curso curso = this.repository.findById(id)
                 .orElseThrow(() -> new  ValidationException("Curso com id " + id + " não encontrado"));
         curso.setNome(dto.nome());
         curso.setCodigo(dto.codigo());
         curso.setCarga_horaria(dto.carga_horaria());
-        return this.repository.save(curso);
+
+        return ResponseEntity.ok(this.repository.save(curso));
     }
 
-    // Deletar um curso
+
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         Curso curso = this.repository.findById(id)
@@ -75,29 +86,34 @@ public class CursoController {
         return ResponseEntity.noContent().build();
     }
 
-    // Adicionar uma turma a um curso
+
+
+
+    //SE A TURMA JÁ ESTIVER CRIADA, PASSAR APENAS O ID NO BODY
     @PostMapping("/{id}/add-turma")
     public ResponseEntity<Curso> addTurma(@PathVariable Integer id, @RequestBody @Valid TurmaRequestDTO turmaDTO) {
-        // Encontrar o curso pelo ID
+
         Curso curso = this.repository.findById(id)
                 .orElseThrow(() -> new  ValidationException("Curso com id " + id + " não encontrado"));
 
-        // Encontrar a turma pelo ID passado no corpo da requisição
+
         Turma turma = this.turmaRepository.findById(turmaDTO.turmaId())
                 .orElseThrow(() -> new  ValidationException("Turma com id " + turmaDTO.turmaId() + " não encontrada"));
 
         // Associar a turma ao curso
         turma.setCurso(curso);
 
-        // Salvar a turma com o curso associado
+
         this.turmaRepository.save(turma);
 
-        // Retornar o curso atualizado
+
         return ResponseEntity.ok(curso);
     }
 
 
 
+
+    //SE A DISCIPLINA JÁ ESTIVER CRIADA, PASSAR APENAS O ID NO BODY
     @PostMapping("/{id}/add-disciplina")
     public ResponseEntity<Curso> addDisciplina(@PathVariable Integer id, @RequestBody @Valid DisciplinaRequestDTO dto) {
         // Encontrar o curso pelo id

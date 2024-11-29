@@ -20,20 +20,29 @@ public class ProfessorController {
     private ProfessorRepository repository;
 
 
+    //FUNÇAO PARA TRAZER TODOS OS PROFESSORES COM O LIST
     @GetMapping
     public List<Professor> findALl(){
+
         return this.repository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Professor findById (@PathVariable Integer id){
 
-        return  this.repository.findById(id)
+    //FUNÇÃO PARA TRAZER AS INFORMAÇÕES DO PROFESSOR PELO SEU ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Professor> findById (@PathVariable Integer id){
+
+        Professor professor = this.repository.findById(id)
                 .orElseThrow(() -> new  ValidationException("Professor com o id " + id + "não encontrado"));
+
+        return ResponseEntity.ok(professor);
     }
 
+
+
+    //FUNÇÃO POST PARA CRIAR UM NOVO PROFESSOR
     @PostMapping
-    public Professor save (@RequestBody @Valid ProfessorRequestDTO dto){
+    public ResponseEntity<Professor>  save (@RequestBody @Valid ProfessorRequestDTO dto){
         if (dto.nome() == null || dto.nome().isEmpty()) {
             throw new ValidationException("O nome do Professor é obrigatório.");
         }
@@ -44,11 +53,14 @@ public class ProfessorController {
         professor.setTelefone(dto.telefone());
         professor.setEspecialidade(dto.especialidade());
 
-        return this.repository.save(professor);
+        return ResponseEntity.ok(this.repository.save(professor));
     }
 
+
+
+    //ATUALIZAR AS INFORMAÇÕES DE UM PROFESSOR PELO SEU ID
     @PutMapping("/{id}")
-    public Professor update (@PathVariable Integer id,
+    public ResponseEntity<Professor> update (@PathVariable Integer id,
                              @RequestBody @Valid ProfessorRequestDTO dto){
 
         Professor professor = this.repository.findById(id)
@@ -57,11 +69,13 @@ public class ProfessorController {
         professor.setEmail(dto.email());
         professor.setTelefone(dto.telefone());
         professor.setEspecialidade(dto.especialidade());
-        return this.repository.save(professor);
+        return ResponseEntity.ok(this.repository.save(professor));
+
 
     }
 
 
+    //FUNÇÃO PARA DELETAR O PROFESSOR PELO SEU ID
     @DeleteMapping("/{id}")
 
     public ResponseEntity<Void> delete(@PathVariable Integer id){

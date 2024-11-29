@@ -30,6 +30,7 @@ public class NotasController {
     public DisciplinaRepository disciplinaRepository;
 
 
+    // FUNÇÃO PARA LISTAR TODAS AS NOTAS
     @GetMapping
     public List<Notas> findAll (){
 
@@ -37,17 +38,22 @@ public class NotasController {
 
     }
 
+
+    //FUNÇÃI PARA MOSTRAR A NOTA PELO SEU ID
     @GetMapping("/{id}")
-    public Notas findById (@PathVariable Integer id){
-        return this.repository.findById(id)
+    public ResponseEntity<Notas> findById (@PathVariable Integer id){
+        Notas notas =this.repository.findById(id)
                 .orElseThrow(() -> new ValidationException("Nota com id" + id + "não encontrada"));
 
+        return ResponseEntity.ok(notas);
 
     }
 
 
+    //FUNÇÃO PARA CRIAR UMA NOVA NOTA E ATRIBUI-LA AO ALUNO EM SUA RESPECTIVA MATÉRIA
+    // E VALIDAÇÃO SE ALUNO ESTÁ MATRICULADO NO CURSO DA DISCIPLINA
     @PostMapping
-    public Notas save(@RequestBody @Valid NotasRequestDTO dto) {
+    public  ResponseEntity<Notas> save(@RequestBody @Valid NotasRequestDTO dto) {
         if (dto.nota() == null) {
             throw new ValidationException("O valor da nota é obrigatório");
         }
@@ -74,34 +80,38 @@ public class NotasController {
         nota.setMatricula(matricula);
         nota.setDisciplina(disciplina);
 
-        return this.repository.save(nota);
+        return ResponseEntity.ok(this.repository.save(nota));
     }
 
 
-@PutMapping("/{id}")
-    public Notas update (@PathVariable Integer id,
-                         @RequestBody @Valid NotasRequestDTO dto){
-        Notas nota = this.repository.findById(id)
-                .orElseThrow(()-> new ValidationException("Nota com o id" + id +"não encontrada"));
 
-        Matricula matricula = this.matriculaRepository.findById(dto.matriculaId())
-                .orElseThrow(() -> new ValidationException("Matricula com o id " + dto.matriculaId() + " não encontrada"));
-        nota.setMatricula(matricula);
+    //FUNÇÃO PARA ATUALIZAR A NOTA DO ALUNO
+    @PutMapping("/{id}")
+        public  ResponseEntity<Notas>  update (@PathVariable Integer id,
+                             @RequestBody @Valid NotasRequestDTO dto){
+            Notas nota = this.repository.findById(id)
+                    .orElseThrow(()-> new ValidationException("Nota com o id" + id +"não encontrada"));
 
-        Disciplina disciplina = this.disciplinaRepository.findById(dto.disciplinaId())
-                .orElseThrow(() -> new ValidationException("Disciplina com o id " + dto.disciplinaId() + "não encontrada"));
-        nota.setDisciplina(disciplina);
+            Matricula matricula = this.matriculaRepository.findById(dto.matriculaId())
+                    .orElseThrow(() -> new ValidationException("Matricula com o id " + dto.matriculaId() + " não encontrada"));
+            nota.setMatricula(matricula);
 
-        nota.setNota(dto.nota());
-        nota.setData_lancamento(dto.data_lancamento());
+            Disciplina disciplina = this.disciplinaRepository.findById(dto.disciplinaId())
+                    .orElseThrow(() -> new ValidationException("Disciplina com o id " + dto.disciplinaId() + "não encontrada"));
+            nota.setDisciplina(disciplina);
 
-        return this.repository.save(nota);
+            nota.setNota(dto.nota());
+            nota.setData_lancamento(dto.data_lancamento());
+
+        return ResponseEntity.ok(this.repository.save(nota));
 
 
 
 
-    }
+        }
 
+
+        //FUNÇÃO PARA DELETAR A NOTA DO ALUNO
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete (@PathVariable Integer id){
 

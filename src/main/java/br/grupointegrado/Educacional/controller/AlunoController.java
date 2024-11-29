@@ -16,8 +16,9 @@ import java.util.List;
 public class AlunoController {
     @Autowired
     private AlunoRepository repository;
-    @GetMapping
 
+
+    @GetMapping
     public List<Aluno> findAll (){
 
         return this.repository.findAll();
@@ -25,15 +26,21 @@ public class AlunoController {
     }
 
 
-    @GetMapping("/{id}")
-    public Aluno findById(@PathVariable Integer id){
 
-        return this.repository.findById(id)
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Aluno> findById(@PathVariable Integer id){
+
+        Aluno aluno =  this.repository.findById(id)
                 .orElseThrow(()-> new  ValidationException("Aluno com ID" + id + "não encontrado"));
+
+        return ResponseEntity.ok(aluno);
     }
 
+
+
     @PostMapping
-    public Aluno save (@RequestBody @Valid AlunoRequestDTO dto){
+    public ResponseEntity<Aluno> save (@RequestBody @Valid AlunoRequestDTO dto){
         if (dto.nome() == null || dto.nome().isEmpty()) {
             throw new ValidationException("O nome do aluno é obrigatório.");
         }
@@ -43,11 +50,14 @@ public class AlunoController {
         aluno.setMatricula(dto.matricula());
         aluno.setData_nascimento(dto.data_nascimento());
 
-        return this.repository.save(aluno);
+         return ResponseEntity.ok(this.repository.save(aluno));
     }
 
+
+
+
     @PutMapping("/{id}")
-    public Aluno update (@PathVariable  Integer id,
+    public ResponseEntity<Aluno> update (@PathVariable  Integer id,
                          @RequestBody @Valid AlunoRequestDTO dto) {
         Aluno aluno = this.repository.findById(id)
                 .orElseThrow(()-> new  ValidationException("Aluno não encontrado para atualização"));
@@ -55,9 +65,11 @@ public class AlunoController {
         aluno.setEmail(dto.email());
         aluno.setMatricula(dto.matricula());
         aluno.setData_nascimento(dto.data_nascimento());
-        return this.repository.save(aluno);
+        return ResponseEntity.ok(this.repository.save(aluno));
 
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete (@PathVariable Integer id){
