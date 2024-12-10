@@ -1,0 +1,1 @@
+Trabalho realizado na matéria de tópicos especias em java da graduação, consiste na criação de uma api de um sistema educacional de universidade, nele tive a oportunidade de trabalhar com relação de banco de dados, Api Rest e lógicas de Programação
